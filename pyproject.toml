@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "zyjj-index-backend"
+version = "0.1.0"
+description = ""
+authors = ["xiaoyou <xiaoyou2333@foxmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+surrealdb = "^1.0.3"
+aioboto3 = "^14.1.0"
+
+
+[tool.poetry.group.dev.dependencies]
+python-dotenv = "^1.1.0"
+pytest = "^8.3.5"
+pytest-asyncio = "^0.26.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
