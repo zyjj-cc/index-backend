@@ -8,7 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.13"
 surrealdb = "^1.0.3"
-aioboto3 = "^14.1.0"
+quart = "^0.20.0"
+minio = "^7.2.15"
 
 
 [tool.poetry.group.dev.dependencies]
