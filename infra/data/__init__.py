@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from io import BytesIO
 
+from common import FileInfo
 from minio import Minio
 
 from infra import Config
@@ -23,37 +24,16 @@ class Data:
     async def stop(self):
         pass
 
-    @staticmethod
-    def __get_content_type(file_name: str):
-        content_type_mapping = {
-            '.html': 'text/html',
-            '.htm': 'text/html',
-            '.css': 'text/css',
-            '.js': 'application/javascript',
-            '.json': 'application/json',
-            '.xml': 'application/xml',
-            '.txt': 'text/plain',
-            '.jpg': 'image/jpeg',
-            '.jpeg': 'image/jpeg',
-            '.png': 'image/png',
-            '.gif': 'image/gif',
-            '.svg': 'image/svg+xml',
-            '.pdf': 'application/pdf',
-        }
-        file_extension = os.path.splitext(file_name)[1].lower()
-        return content_type_mapping.get(file_extension, 'application/octet-stream')
+    def __upload_object(self, file: FileInfo, data: bytes):
+        self.__client.put_object(self.__bucket, file.id, BytesIO(data), len(data), content_type=file.content_type)
 
-    def __upload_object(self, file_name: str, key: str, data: bytes):
-        self.__client.put_object(self.__bucket, key, BytesIO(data), len(data), content_type=self.__get_content_type(file_name))
-
-    async def upload_object(self, file_name: str, key: str, data: bytes):
+    async def upload_object(self, file: FileInfo, data: bytes):
         """
         上传对象
-        :param file_name: 文件名称
-        :param key: 文件key
+        :param file: 文件数据
         :param data: 对象数据
         """
-        self.__upload_object(file_name, key, data)
+        self.__upload_object(file, data)
 
     async def get_object_bytes(self, key: str):
         """

@@ -10,6 +10,7 @@ python = "^3.13"
 surrealdb = "^1.0.3"
 quart = "^0.20.0"
 minio = "^7.2.15"
+quart-cors = "^0.8.0"
 
 
 [tool.poetry.group.dev.dependencies]

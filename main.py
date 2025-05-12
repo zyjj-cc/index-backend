@@ -1,6 +1,8 @@
 import logging
-from quart import Quart, jsonify, request
-from core import CoreService
+
+from quart import Quart
+from quart_cors import cors
+from router import entity_bp, file_bp, relation_bp, server
 
 logging.basicConfig(
     level=logging.INFO,
@@ -8,10 +10,13 @@ logging.basicConfig(
     datefmt="%m-%d %H:%M:%S"
 )
 
-# 初始化sdk并注册服务
-server = CoreService()
+
 # 初始化app服务
 app = Quart(__name__)
+app = cors(app)
+app.register_blueprint(entity_bp)
+app.register_blueprint(file_bp)
+app.register_blueprint(relation_bp)
 
 @app.before_serving
 async def startup():
@@ -25,27 +30,6 @@ async def stop():
     # 需要把服务启动功能添加到后台任务
     await server.stop()
     logging.info("[core] server stopped")
-
-@app.route('/notify', methods=['GET'])
-async def notify():
-    """
-    通知有新任务，后台自动处理
-    :return:
-    """
-    await server.notify()
-    return 'ok'
-
-@app.route('/execute', methods=['POST'])
-async def invoke():
-    """
-    直接执行任务并返回任务执行结果
-    :return:
-    """
-    task_info = await request.get_json()
-    logging.info(f"[api] execute input {task_info}")
-    data = await server.execute_one_task(task_info)
-    logging.info(f"[api] execute output {data}")
-    return jsonify(data)
 
 
 if __name__ == '__main__':
