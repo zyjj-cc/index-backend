@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
 
-RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --without dev --no-root
+RUN poetry install --without dev --no-root
 
 FROM registry.xiaoyou.host/xiaoyou66/base-runtime:v1.0.0 as runtime
 
